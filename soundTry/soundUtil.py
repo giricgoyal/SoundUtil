@@ -152,6 +152,11 @@ class SoundUtil:
 	# takes one/two arguments
 	# > program -- sets the program of the sound. Eg. Random/custom
 	# > list -- list type holds other options
+
+	# setProgram(<program-type>, [parameters])
+	# setProgram(SoundCons.ONCE, [startTime(int), endTime(int)])
+	# setProgram(SoundCons.RANDOM, [random-level, randomTime(integer), randomSeed(float 0 to 1), randomVolume])
+
 	# setProgram(SoundCons.ONCE, [2, 10])
 	# setProgram(SoundCons.ONCE, [2])
 	# setProgram(SoundCons.RANDOM)				-- default randomLevel = SoundCons.RANDOM_FULL
