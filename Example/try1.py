@@ -23,9 +23,7 @@ se = getSoundEnvironment()
 
 obj1 = SoundUtil("test", "hospitalbackgroundMONO.wav", sphere)
 obj1.setLoop(True)
-obj1.setProgram(SoundCons.RANDOM, [SoundCons.RANDOM_CONSTANT, 5, 0.80])
-#obj1.setProgram(SoundCons.ONCE, [2, 5])
-
+obj1.setProgram("-p ONCE -s 2 -e 5")
 
 #sound1 = se.loadSoundFromFile("test", "hospitalbackgroundMONO.wav")
 
