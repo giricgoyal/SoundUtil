@@ -21,9 +21,9 @@ box.setPosition(Vector3(0,1,-5))
 
 se = getSoundEnvironment()
 
-obj1 = SoundUtil("test", "hospitalbackgroundMONO.wav", sphere)
+obj1 = SoundUtil("test", "phoneringingMONO.wav", sphere)
 obj1.setLoop(True)
-obj1.setProgram("-p ONCE -s 2 -e 5")
+obj1.setProgram("-p ONCE -s 5")
 
 #sound1 = se.loadSoundFromFile("test", "hospitalbackgroundMONO.wav")
 
