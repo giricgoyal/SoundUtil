@@ -217,7 +217,7 @@ class SoundUtil:
 					if value == None:
 						self.__randomSeed = random.random()
 					else:
-						self.__randomSeed = random.random() if (float(value) < 0) else float(value)
+						self.__randomSeed = random.random() if ((float(value) < 0) or (float(value) > 100)) else (100 - int(value)/100)
 					# end if
 				elif (flag == 'v'):
 					if value == None:
@@ -279,29 +279,6 @@ class SoundUtil:
 	# takes one/two arguments
 	# > program -- sets the program of the sound. Eg. Random/custom
 	# > list -- list type holds other options
-
-	# setProgram(<program-type>, [parameters])
-	# setProgram(SoundCons.ONCE, [startTime(int), endTime(int)])
-	# setProgram(SoundCons.RANDOM, [random-level, randomTime(integer), randomSeed(float 0 to 1), randomVolume])
-
-	# setProgram(SoundCons.ONCE, [2, 10])
-	# setProgram(SoundCons.ONCE, [2])
-	# setProgram(SoundCons.RANDOM)				-- default randomLevel = SoundCons.RANDOM_FULL
-	# setProgram(SoundCons.RANDOM, [SoundCons.RANDOM_FULL])
-	# setProgram(SoundCons.RANDOM, [SoundCons.RANDOM_CONSTANT])
-	# setProgram(SoundCons.RANDOM, [SoundCons.RANDOM_CONSTANT, 25])
-	# setProgram(SoundCons.RANDOM, [SoundCons.RANDOM_CONSTANT, 25, 0.80])
-	# setProgram(SoundCons.RANDOM, [SoundCons.RANDOM_LOOP, 25, 0.80, 0.5])
-
-	# Flags:
-	#
-	# -p : set Program
-	# -s : set start time
-	# -e : set end time
-	# -l : random program level/type
-	# -t : random time index (int)
-	# -f : radnom seed index (float)
-	# -v : set volume
 
 	# pass one argument to set only the start time
 	# no return value
