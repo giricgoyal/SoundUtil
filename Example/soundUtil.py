@@ -486,17 +486,17 @@ class SoundUtil:
 			if (int(t) >= self.__startTime):
 				self.__soundInstance.__setPlay(True)
 				if (self.__program == SoundCons.FREQUENT_CONSTANT):
-					if (int(t) - self.__randomDt >= self.__timeGap)
+					if ((int(t) - self.__randomDt) >= self.__timeGap):
 						self.__randomDt = int(t)
 						if self.__isPlaying == False:
 							self.__soundInstance.__setPlay(True)
 						# end if
 					# end if
 				else:
-					if (int(t) - self.__randomDt <= self.__timeGap): 
+					if ((int(t) - self.__randomDt) <= self.__timeGap): 
 						if (self.__frequencyCounter <= self.__frequency):
 							num = random.random()
-							if (num <= self.__timeGap/self.__frequency):
+							if (num <= (self.__timeGap/self.__frequency)):
 								self.__frequencyCounter = self.__frequencyCounter + 1
 
 								if self.__isPlaying == False:
