@@ -24,7 +24,7 @@ How to use:
 3.  Use SoundUtil's update method to update the sound with the object. Call the sound Util's Update method in your update method.
     
     def update (frame, t, dt):   
-        soundObject.update(frame, t, dt)
+            soundObject.update(frame, t, dt)
 
 
 You can read about the method directory at the wiki page.
