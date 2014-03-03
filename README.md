@@ -21,8 +21,7 @@ How to use:
 
 2.  Handle sound program and options. (More information on programs and available options below).
 
-3.  Use SoundUtil's update method to update the sound with the object. Call the sound Util's Update method in your update method.
-
+3.  Use SoundUtil's update method to update the sound with the object. Call the sound Util's Update method in your update method.   
 
 
 
