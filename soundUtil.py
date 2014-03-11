@@ -52,14 +52,15 @@ class SoundUtil:
 	# ------------------------------------------------------------------------------------
 	# private data members
 
-	__debugOn = True		# (boolean)	for debugging purposes only, set to False for not debugging messages
+	__debugOn = False		# (boolean)	for debugging purposes only, set to False for not debugging messages
 
 	__soundInstance = None	# container for the sound instance
 	__soundLoad = None		# container for loading sound
 	__hostObj = None		# container for host object
+	__soundFile = ""		# (string) file name/path
 
 	__loopPlay = False		# (boolean)	play in loop
-	__stereo = True			# (boolean)	play in stereo mode
+	__stereo = False			# (boolean)	play in stereo mode
 	__isPlaying = False		# (boolean)	check is playing sound
 
 	__startTime = 0			# (int)		start time of play	(in seconds)
@@ -96,13 +97,15 @@ class SoundUtil:
 	# > dir -- directory name in which you want to put the sound to
 	# > soundFilePath -- path and name to the sound file.
 	# no return value
-	def __init__(self, dir, soundFilePath, hostObj = None):
+	def __init__(self, dirc, soundFilePath, hostObj = None):
 		# None if no hostObj
 		if self.__soundEnv != None:
 			self.__hostObj = hostObj
-			self.__soundLoad = self.__soundEnv.loadSoundFromFile(dir, soundFilePath)
+			self.__soundLoad = self.__soundEnv.loadSoundFromFile(dirc, soundFilePath)
 			self.__soundInstance = SoundInstance(self.__soundLoad)
 			self.__soundInstance.setLoop(False)
+			self.__soundFile = soundFilePath
+			#self.__soundEnv.showDebugInfo(True)
 		# end if
 	# end __init__
 
@@ -115,12 +118,18 @@ class SoundUtil:
 	# no return value
 	def __setPlay(self, val):
 		if val == True:
-			self.__debugMode("Play")
-			if self.__isPlaying == False:
+			#if self.__isPlaying == False:
+			if 1==1:
 				self.__isPlaying = True
 				if self.__stereo == True:
+					self.__debugMode("Playing " + str(self.__soundFile) + " ; Vol " + str(self.__soundInstance.getVolume()))
+					self.__debugMode("Position : " + str(self.__soundInstance.getPosition()))
+					self.__debugMode("----");
 					self.__soundInstance.playStereo()
 				else:
+					self.__debugMode("Playing " + str(self.__soundFile) + " ; Vol " + str(self.__soundInstance.getVolume()))
+					self.__debugMode("Position : " + str(self.__soundInstance.getPosition()))
+					self.__debugMode("----");
 					self.__soundInstance.play()
 				# end if
 			# end if
@@ -217,7 +226,7 @@ class SoundUtil:
 					if value == None:
 						self.__randomSeed = random.random()
 					else:
-						self.__randomSeed = random.random() if ((float(value) < 0) or (float(value) > 100)) else (100 - int(value)/100)
+						self.__randomSeed = random.random() if ((int(value) < 0) or (int(value) > 100)) else float((float(100 - float(value))/100))
 					# end if
 				elif (flag == 'v'):
 					if value == None:
@@ -292,14 +301,14 @@ class SoundUtil:
 
 		elif (self.__program == SoundCons.RANDOM_LOOP):
 			self.__soundInstance.setLoop(True)
-			self.__soundInstance.play()
+			self.__setPlay(True)
 
 		elif (self.__program == SoundCons.LOOP):
 			self.__soundInstance.setLoop(True)
-			self.__soundInstance.__setPlay(True)
+			self.__setPlay(True)
 
-		elif (self.__program == NONE):
-			self.__soundInstance.__setPlay(True)
+		elif (self.__program == SoundCons.NONE):
+			self.__setPlay(True)
 
 		elif (self.__program == SoundCons.FREQUENT_CONSTANT) or (self.__program == SoundCons.FREQUENT_RANDOM):
 			if (self.__startTime == 0):
@@ -397,9 +406,8 @@ class SoundUtil:
 
 		# use __program to identify how to play the sound
 		if (self.__program == SoundCons.RANDOM_FULL) or (self.__program == SoundCons.RANDOM_LOOP) or (self.__program == SoundCons.RANDOM_CONSTANT):
-			self.__debugMode(str(self.__randomTime))
 			if ((t - self.__randomDt) > self.__randomTime):
-				self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+				self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 
 				self.__randomDt = t
 				random.seed()
@@ -416,8 +424,7 @@ class SoundUtil:
 					# end if
 				else:
 					if num > self.__randomSeed:
-						if (self.__isPlaying == False):
-							self.__setPlay(True)
+						self.__setPlay(True)
 						# end if
 					# end if
 				# end if
@@ -428,45 +435,44 @@ class SoundUtil:
 			if (self.__startTime != 0) and (self.__endTime != 0):
 				if (((int(t) >= self.__startTime) and (int(t) <= self.__endTime)) and (self.__isPlaying == False)):
 					# start playing from start till end
-					self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+					self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 					self.__setPlay(True)
 				# end if
 				if (((int(t) >= self.__startTime) and (self.__endTime == -1)) and (self.__isPlaying == False)):
 					# start playing from start till it finishes playing
-					self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+					self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 					self.__setPlay(True)
 				# end if
 				if ((int(t) >= self.__endTime) and (self.__endTime != -1) and (self.__isPlaying == True)):
 					# stop after t
-					self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+					self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 					self.__setPlay(False)
 				# end if
 				if ((int(t) < self.__startTime) and (self.__isPlaying == True)):
 					# stop playing otherwise
-					self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+					self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 					self.__setPlay(False)
 				# end if
 			elif (((self.__startTime == 0) and (self.__endTime == -1)) and (self.__isPlaying == False)):
 				# start playing from 0 till it finishes playing
-				self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+				self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 				self.__setPlay(True)
 			# end if
 
 		elif self.__program == SoundCons.LOOP:
 			if (self.__isPlaying == False):
-				self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
-				self.__soundInstance.__setPlay(True)
+				self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+				self.__setPlay(True)
 			#self.__debugMode("Playing : LOOP")
 
 		elif (self.__program == SoundCons.FREQUENT_CONSTANT) or (self.__program == SoundCons.FREQUENT_RANDOM):
-			self.__debugMode("Updating position at : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
+			self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 			if (int(t) >= self.__startTime):
-				self.__soundInstance.__setPlay(True)
+				self.__setPlay(True)
 				if (self.__program == SoundCons.FREQUENT_CONSTANT):
 					if ((int(t) - self.__randomDt) >= self.__timeGap):
 						self.__randomDt = int(t)
-						if self.__isPlaying == False:
-							self.__soundInstance.__setPlay(True)
+						self.__setPlay(True)
 						# end if
 					# end if
 				else:
@@ -476,8 +482,7 @@ class SoundUtil:
 							if (num <= (self.__timeGap/self.__frequency)):
 								self.__frequencyCounter = self.__frequencyCounter + 1
 
-								if self.__isPlaying == False:
-									self.__soundInstance.__setPlay(True)	
+								self.__setPlay(True)	
 								# end if
 							# end if
 					else:
@@ -497,6 +502,8 @@ class SoundUtil:
 		if (self.__soundInstance.isPlaying() == False):
 			self.__isPlaying = False
 			self.__debugMode("Not Playing")	
+
+		#print self.__soundInstance.isDone()
 		# end if
 
 	# end update
@@ -506,7 +513,7 @@ class SoundUtil:
 	# takes one argument
 	# val -- true/false
 	# no return value
-	def setDebug(val):
+	def setDebug(self, val):
 		self.__debugOn = val
 	# end setDebug
 
