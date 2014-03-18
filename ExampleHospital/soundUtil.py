@@ -84,6 +84,8 @@ class SoundUtil:
 
 	__soundEnv = getSoundEnvironment()	# container for sound environment
 
+	__options = ['p', 's', 'e', 't', 'f', 'v', 'r', 'o']
+
 
 
 	# ------------------------------------------------------------------------------------
@@ -165,12 +167,44 @@ class SoundUtil:
 	# end __debugMode
 
 
+	def __errorMode(self, text):
+		print "\n!!!!!!!!!!\n"
+		print "------->\n" + text + "\n<-------\n"
+		print "Exiting!!!!\n"
+		exit(1)
+	# end __errorMode()
+
+	# (PRIVATE) : find errors in input string
+	# takes one argument
+	# > arr -- array of input
+	# no return value
+	def __reportError(self, arr):
+		for i in range(0,len(arr)):
+			if arr[i].strip() != "":
+				if " " in arr[i].strip():
+					if arr[i].strip().split(" ")[0] in self.__options:
+						pass
+					else:
+						self.__errorMode("No such option as \"" + arr[i].strip().split(" ")[0] + "\" in \"" + self.__soundFile + "\".")
+					# end if
+				else:
+					if arr[i].strip() in self.__options:
+						self.__errorMode("Option/Value missing for \"" + arr[i].strip() + "\" in \"" + self.__soundFile + "\".")
+					else:
+						self.__errorMode("No such option as \"" + arr[i].strip() + "\" in \"" + self.__soundFile + "\"")
+				# end if
+			# end if
+		# end for
+	# end __reportError()
+
+
 	# (PRIVATE) : parse the input string for program
 	# takes one argument
 	# > string -- input string
 	# no return value
 	def __parseInput(self, input):
 		inputArr = input.strip().split("-")
+		self.__reportError(inputArr)
 		for eachInput in inputArr:
 			if (eachInput.strip() != ""):
 				tempArr = eachInput.strip().split(" ")
@@ -458,12 +492,14 @@ class SoundUtil:
 				self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 				self.__setPlay(True)
 			# end if
-
+		
 		elif self.__program == SoundCons.LOOP:
 			if (self.__isPlaying == False):
 				self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 				self.__setPlay(True)
+			# end if
 			#self.__debugMode("Playing : LOOP")
+		
 
 		elif (self.__program == SoundCons.FREQUENT_CONSTANT) or (self.__program == SoundCons.FREQUENT_RANDOM):
 			self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
@@ -492,18 +528,19 @@ class SoundUtil:
 			# end if
 		# end 
 
-
+		if self.__soundInstance.isDone() == True:
+			self.__isPlaying = False
+		# end if
 		
-		if self.__soundInstance.isPlaying() == True:
+		if (self.__soundInstance.isPlaying() == True):
 			self.__isPlaying = True
-			self.__debugMode("Still playing")
+			#self.__debugMode("Still playing")
 		# end if
 		
 		if (self.__soundInstance.isPlaying() == False):
 			self.__isPlaying = False
-			self.__debugMode("Not Playing")	
+			#self.__debugMode("Not Playing")	
 
-		#print self.__soundInstance.isDone()
 		# end if
 
 	# end update

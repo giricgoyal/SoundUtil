@@ -23,7 +23,7 @@ se = getSoundEnvironment()
 
 obj1 = SoundUtil("test", "codeblueMONO.wav", sphere)
 #obj1.setLoop(True)
-obj1.setProgram("-p RANDOM_CONSTANT -t 5 -f 95 -v "+str(4*0.2))
+obj1.setProgram("-p RANDOM_CONSTANT -t 10 -f 95 -v "+str(2*1.0))
 obj1.setDebug(True)
 
 #sound1 = se.loadSoundFromFile("test", "hospitalbackgroundMONO.wav")

@@ -528,9 +528,11 @@ class SoundUtil:
 			# end if
 		# end 
 
-
+		if self.__soundInstance.isDone() == True:
+			self.__isPlaying = False
+		# end if
 		
-		if self.__soundInstance.isPlaying() == True:
+		if (self.__soundInstance.isPlaying() == True):
 			self.__isPlaying = True
 			#self.__debugMode("Still playing")
 		# end if
@@ -539,7 +541,6 @@ class SoundUtil:
 			self.__isPlaying = False
 			#self.__debugMode("Not Playing")	
 
-		#print self.__soundInstance.isDone()
 		# end if
 
 	# end update

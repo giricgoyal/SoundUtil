@@ -126,9 +126,12 @@ light3.setEnabled(True)
 
 
 # Setup sound environment
-                             
+                 
+
+soundUpdateList = []                 
 soundFactor = 0.2
 
+'''
 def addSound (instance, sx, sy, sz, vol):
         time.sleep(1)
         simusic = SoundInstance(instance)
@@ -136,29 +139,57 @@ def addSound (instance, sx, sy, sz, vol):
         simusic.setLoop(True)
         simusic.setVolume(vol * soundFactor)
         simusic.play()
-                              
+
 se = getSoundEnvironment()
 if (se != None):
+'''
 
+
+station1 = SoundUtil("nurses", "SOUNDS/nursesstationMONO.wav")
+station1.setSoundPosition(Vector3(-3, 1, 1))
+station1.setProgram("-p LOOP -v "+str(0.3 * soundFactor))
+station1.setDebug(True)
+soundUpdateList.append(station1)
+
+station2 = SoundUtil("visiting", "SOUNDS/visitinghoursMONO.wav")
+station2.setSoundPosition(Vector3(3, 1, 1))
+station2.setProgram("-p LOOP -v "+str(0.3 * soundFactor))
+station2.setDebug(True)
+soundUpdateList.append(station2)
+
+station3 = SoundUtil("interior", "SOUNDS/hospitalinteriorMONO.wav")
+station3.setSoundPosition(Vector3(1, 1, -3))
+station3.setProgram("-p LOOP -v "+str(1.5 * soundFactor))
+station3.setDebug(True)
+soundUpdateList.append(station3)
+
+station5 = SoundUtil("hallway", "SOUNDS/hospitalhallwayMONO.wav")
+station5.setSoundPosition(Vector3(1, 1, 3))
+station5.setProgram("-p LOOP -v "+str(0.3 * soundFactor))
+station5.setDebug(True)
+soundUpdateList.append(station5)
+
+
+'''
         station1 = se.loadSoundFromFile('nurses', 'SOUNDS/nursesstationMONO.wav')
-	addSound(station1, -3, 1, 1, 0.3)
+    addSound(station1, -3, 1, 1, 0.3)
 
         station2 = se.loadSoundFromFile('visiting', 'SOUNDS/visitinghoursMONO.wav')
-	addSound(station2, 3, 1, 1, 0.3)
+    addSound(station2, 3, 1, 1, 0.3)
 
         station3 = se.loadSoundFromFile('interior', 'SOUNDS/hospitalinteriorMONO.wav')
-	addSound(station3, 1, 1, -3, 1.5)
+    addSound(station3, 1, 1, -3, 1.5)
 
         station5 = se.loadSoundFromFile('hallway', 'SOUNDS/hospitalhallwayMONO.wav')
-	addSound(station2, 1, 1, 3, 0.3)
-
+    addSound(station2, 1, 1, 3, 0.3)
+    
 
 # incidental sounds that should randomly start/stop
 # can leave them looping and just turn the volume up/down
     
-	global timusic, pimusic, dimusic, eimusic, cimusic
+    global timusic, pimusic, dimusic, eimusic, cimusic
 
-        '''
+        
         device1 = se.loadSoundFromFile('typing', 'SOUNDS/typingMONO.wav')
         time.sleep(1)
         timusic = SoundInstance(device1)
@@ -200,36 +231,41 @@ if (se != None):
         cimusic.setVolume(0.7 * soundFactor)
         '''
 
-        device1_New = SoundUtil("typing", "SOUNDS/typingMONO.wav")
-        time.sleep(1)
-        device1_New.setProgram("-p RANDOM_LOOP -t 60 -f 30 -v "+str(0.5*soundFactor))
-        device1_New.setSoundPosition(Vector3(0, 1, -3))
-        device1_New.setDebug(True)
-        
-        
-        device2_New = SoundUtil("phone", "SOUNDS/phoneringingMONO.wav")
-        time.sleep(1)
-        device2_New.setProgram("-p RANDOM_LOOP -t 15 -f 30 -v "+str(0.6*soundFactor))
-        device2_New.setSoundPosition(Vector3(3, 1, 0))
-        #device2_New.setDebug(True)
-        
-        device3_New = SoundUtil("printing", "SOUNDS/dotmatrixprinterMONO.wav")
-        time.sleep(1)
-        device3_New.setProgram("-p RANDOM_LOOP -t 60 -f 50 -v "+str(1.0*soundFactor))
-        device3_New.setSoundPosition(Vector3(3, 1, 0))
-        #device3_New.setDebug(True)
-        
-        device4_New = SoundUtil("elevator", "SOUNDS/elevatordoorMONO.wav")
-        time.sleep(1)
-        device4_New.setProgram("-p RANDOM_CONSTANT -t 60 -f 20 -v "+str(0.7*soundFactor))
-        device4_New.setSoundPosition(Vector3(2, 1, 3))
-        #device4_New.setDebug(True)
+device1_New = SoundUtil("typing", "SOUNDS/typingMONO.wav")
+time.sleep(1)
+device1_New.setProgram("-p RANDOM_LOOP -t 60 -f 30 -v "+str(0.5*soundFactor))
+device1_New.setSoundPosition(Vector3(0, 1, -3))
+device1_New.setDebug(True)
+soundUpdateList.append(device1_New)
 
-        device5_New = SoundUtil("codeblue", "SOUNDS/codeblueMONO.wav")
-        time.sleep(1)
-        device5_New.setProgram("-p RANDOM_CONSTANT -t 120 -f 5 -v "+str(0.7*soundFactor))
-        device5_New.setSoundPosition(Vector3(-2, 1, -3))
-        #device5_New.setDebug(True)
+
+device2_New = SoundUtil("phone", "SOUNDS/phoneringingMONO.wav")
+time.sleep(1)
+device2_New.setProgram("-p RANDOM_LOOP -t 15 -f 30 -v "+str(0.6*soundFactor))
+device2_New.setSoundPosition(Vector3(3, 1, 0))
+device2_New.setDebug(True)
+soundUpdateList.append(device2_New)
+
+device3_New = SoundUtil("printing", "SOUNDS/dotmatrixprinterMONO.wav")
+time.sleep(1)
+device3_New.setProgram("-p RANDOM_LOOP -t 60 -f 50 -v "+str(1.0*soundFactor))
+device3_New.setSoundPosition(Vector3(3, 1, 0))
+device3_New.setDebug(True)
+soundUpdateList.append(device3_New)
+
+device4_New = SoundUtil("elevator", "SOUNDS/elevatordoorMONO.wav")
+time.sleep(1)
+device4_New.setProgram("-p RANDOM_CONSTANT -t 60 -f 20 -v "+str(0.7*soundFactor))
+device4_New.setSoundPosition(Vector3(2, 1, 3))
+device4_New.setDebug(True)
+soundUpdateList.append(device4_New)
+
+device5_New = SoundUtil("codeblue", "SOUNDS/codeblueMONO.wav")
+time.sleep(1)
+device5_New.setProgram("-p RANDOM_CONSTANT -t 120 -f 5 -v "+str(0.7*soundFactor))
+device5_New.setSoundPosition(Vector3(-2, 1, -3))
+device5_New.setDebug(True)
+soundUpdateList.append(device5_New)
         
 
 
@@ -242,40 +278,40 @@ oldC = 0
 random.seed()
 '''
 def updateDotMatrix():
-	global soundFactor
-	num = random.random()
-	if (num > 0.7):
-		dimusic.setVolume(0.5 * soundFactor)
-	else:
-		dimusic.setVolume(0.0 * soundFactor)
+    global soundFactor
+    num = random.random()
+    if (num > 0.7):
+        dimusic.setVolume(0.5 * soundFactor)
+    else:
+        dimusic.setVolume(0.0 * soundFactor)
 
 def updatePhone():
-	global soundFactor
-	num = random.random()
-	if (num > 0.7):
-		pimusic.setVolume(0.6 * soundFactor)
-	else:
-		pimusic.setVolume(0.0 * soundFactor)
+    global soundFactor
+    num = random.random()
+    if (num > 0.7):
+        pimusic.setVolume(0.6 * soundFactor)
+    else:
+        pimusic.setVolume(0.0 * soundFactor)
 
 def updateTyping():
-	global soundFactor
-	num = random.random()
-	if (num > 0.5):
-		timusic.setVolume(1.0 * soundFactor)
-	else:
-		timusic.setVolume(0.0 * soundFactor)
+    global soundFactor
+    num = random.random()
+    if (num > 0.5):
+        timusic.setVolume(1.0 * soundFactor)
+    else:
+        timusic.setVolume(0.0 * soundFactor)
 
 def updateElevator():
-	global soundFactor
-	num = random.random()
-	if (num > 0.8):
-		eimusic.play()
+    global soundFactor
+    num = random.random()
+    if (num > 0.8):
+        eimusic.play()
 
 def updateCodeblue():
-	global soundFactor
-	num = random.random()
-	if (num > 0.95):
-		cimusic.play() 
+    global soundFactor
+    num = random.random()
+    if (num > 0.95):
+        cimusic.play() 
 '''
 
 
@@ -286,7 +322,7 @@ def onUpdate(frame, t, dt):
 
     if (t - oldD) > 60:
             oldD = t
-	    updateDotMatrix()
+        updateDotMatrix()
 
     if (t - oldP) > 15:
             oldP = t
@@ -305,13 +341,8 @@ def onUpdate(frame, t, dt):
             updateCodeblue()
     '''
 
-    device1_New.update(frame, t, dt)
-    device2_New.update(frame, t, dt)
-    device3_New.update(frame, t, dt)
-    device4_New.update(frame, t, dt)
-    device5_New.update(frame, t, dt)
-
-
+    for soundObj in soundUpdateList:
+        soundObj.update(frame, t, dt)
 
 setUpdateFunction(onUpdate)
 
