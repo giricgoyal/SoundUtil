@@ -528,8 +528,8 @@ class SoundUtil:
 			# end if
 		# end 
 
-		if self.__soundInstance.isDone() == True:
-			self.__isPlaying = False
+		#if self.__soundInstance.isDone() == True:
+		#	self.__isPlaying = False
 		# end if
 		
 		if (self.__soundInstance.isPlaying() == True):
