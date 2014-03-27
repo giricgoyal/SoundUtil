@@ -11,13 +11,21 @@ cam = getDefaultCamera()
 
 scene.setBackgroundColor(Color(0, 0, 0, 1))
 
-sphere = SphereShape.create(1,4)
+light = Light.create()
+light.setLightType(LightType.Point)
+
+
+sphere = SphereShape.create(0.1,4)
 sphere.getMaterial().setAlpha(0.5)
 sphere.setPosition(Vector3(10,1,0))
+sphere.getMaterial().setProgram("colored")
+sphere.setEffect('colored -e #88000099')
 
 box = BoxShape.create(1,3,1)
 box.getMaterial().setAlpha(0.5)
 box.setPosition(Vector3(0,1,-5))
+box.getMaterial().setProgram("colored")
+box.setEffect('colored -e #00008899')
 
 se = getSoundEnvironment()
 
@@ -39,7 +47,7 @@ def onUpdate(frame, t, dt):
 	global theta, r
 
 	count = count + 1
-	if count % 60*5 == 0:
+	if count % 60*30 == 0:
 		if theta > 360:
 			theta = 0
 		else:
@@ -47,7 +55,7 @@ def onUpdate(frame, t, dt):
 		x = r1 * cos(theta)
 		z = r2 * sin(theta)
 		theta = theta + t/2
-		sphere.setPosition(Vector3(10+count/60, 0))
+		sphere.setPosition(Vector3(1+count/60, 0, 0))
 		obj1.update(frame, t, dt)
 
 

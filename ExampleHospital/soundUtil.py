@@ -5,6 +5,13 @@ from cyclops import *
 from omegaToolkit import *
 import random
 
+
+
+soundEnv = getSoundEnvironment()	# container for sound environment
+
+
+
+
 class SoundCons:
 
 	# ------------------------------------------------------------------------------------
@@ -53,6 +60,9 @@ class SoundUtil:
 	# private data members
 
 	__debugOn = False		# (boolean)	for debugging purposes only, set to False for not debugging messages
+	__sphere = None 		# (Shape) for debugging sound position
+	__name = None 			# (text) for debugging sound position
+	__line = None 			# (line) for debugging sound position
 
 	__soundInstance = None	# container for the sound instance
 	__soundLoad = None		# container for loading sound
@@ -82,8 +92,7 @@ class SoundUtil:
 	__frequencyCounter = 0	# counter for frequency (int) use when program is FREQUENT_RANDOM
 
 
-	__soundEnv = getSoundEnvironment()	# container for sound environment
-
+	
 	__options = ['p', 's', 'e', 't', 'f', 'v', 'r', 'o']
 
 
@@ -101,9 +110,10 @@ class SoundUtil:
 	# no return value
 	def __init__(self, dirc, soundFilePath, hostObj = None):
 		# None if no hostObj
-		if self.__soundEnv != None:
+		global __soundEnv
+		if soundEnv != None:
 			self.__hostObj = hostObj
-			self.__soundLoad = self.__soundEnv.loadSoundFromFile(dirc, soundFilePath)
+			self.__soundLoad = soundEnv.loadSoundFromFile(dirc, soundFilePath)
 			self.__soundInstance = SoundInstance(self.__soundLoad)
 			self.__soundInstance.setLoop(False)
 			self.__soundFile = soundFilePath
@@ -295,6 +305,15 @@ class SoundUtil:
 			# end if
 		# end for 
 	# end __parseInput
+
+
+	def __showSound(self):
+		self.__debugMode("Showing sound in space")
+		self.__sphere.setPosition(self.__soundInstance.getPosition())
+		self.__name.setPosition(self.__sphere.getPosition() + Vector3(0,1,0))
+		self.__name.setFacingCamera(getDefaultCamera())
+		
+	# end __showSound
 
 	# ------------------------------------------------------------------------------------
 	# public members
@@ -543,6 +562,9 @@ class SoundUtil:
 
 		# end if
 
+		if (self.__debugOn == True):
+			self.__showSound()
+
 	# end update
 
 
@@ -550,8 +572,19 @@ class SoundUtil:
 	# takes one argument
 	# val -- true/false
 	# no return value
-	def setDebug(self, val):
+	def setDebug(self, val, color = "#DDDD1155"):
 		self.__debugOn = val
+		self.__sphere = SphereShape.create(0.5, 4)
+		self.__sphere.getMaterial().setAlpha(0.7)
+		self.__sphere.setEffect("colored -d " + color)
+		self.__sphere.getMaterial().setTransparent(True)
+		self.__name = Text3D.create('fonts/verdana.ttf', 1, str(self.__soundFile))
+		self.__name.setFontSize(1)
+		self.__name.getMaterial().setDoubleFace(1)
+		self.__name.setFixedSize(False)
+		self.__name.setColor(Color('white'))
+
+		
 	# end setDebug
 
 # end class SoundUtil
