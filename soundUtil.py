@@ -61,6 +61,7 @@ class SoundUtil:
 
 	__debugOn = False		# (boolean)	for debugging purposes only, set to False for not debugging messages
 	__sphere = None 		# (Shape) for debugging sound position
+	__sphere2 = None
 	__name = None 			# (text) for debugging sound position
 	__line = None 			# (line) for debugging sound position
 
@@ -310,8 +311,10 @@ class SoundUtil:
 	def __showSound(self):
 		self.__debugMode("Showing sound in space")
 		self.__sphere.setPosition(self.__soundInstance.getPosition())
-		self.__name.setPosition(self.__sphere.getPosition() + Vector3(0,1,0))
-		self.__name.setFacingCamera(getDefaultCamera())
+		self.__sphere2.setPosition(self.__soundInstance.getPosition())
+
+		self.__name.setPosition(self.__sphere.getPosition() + Vector3(0,0.5,0))
+		#self.__name.setFacingCamera(getDefaultCamera())
 		
 	# end __showSound
 
@@ -572,17 +575,26 @@ class SoundUtil:
 	# takes one argument
 	# val -- true/false
 	# no return value
-	def setDebug(self, val, color = "#DDDD1155"):
+	def setDebug(self, val, color = "#DDDD11ee"):
 		self.__debugOn = val
 		self.__sphere = SphereShape.create(0.5, 4)
-		self.__sphere.getMaterial().setAlpha(0.7)
+		self.__sphere.getMaterial().setAlpha(0.4)
 		self.__sphere.setEffect("colored -d " + color)
 		self.__sphere.getMaterial().setTransparent(True)
+
+		self.__sphere2 = SphereShape.create(0.1, 4)
+		self.__sphere2.getMaterial().setAlpha(0)
+		self.__sphere2.setEffect("colored -d #999999FF")
+
 		self.__name = Text3D.create('fonts/verdana.ttf', 1, str(self.__soundFile))
-		self.__name.setFontSize(1)
+		self.__name.setFontSize(0.07)
 		self.__name.getMaterial().setDoubleFace(1)
 		self.__name.setFixedSize(False)
 		self.__name.setColor(Color('white'))
+		self.__name.yaw(radians(180))
+
+
+		
 
 		
 	# end setDebug

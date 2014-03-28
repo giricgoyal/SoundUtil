@@ -355,3 +355,12 @@ getDefaultCamera().setPosition(Vector3(-0.75, 0, 0))
 # camera position is where you feet are, offset is where your head is   
 # which should be like 1.2m
 getDefaultCamera().setHeadOffset(Vector3(0, 1.2, 0))
+
+
+#lock down the camera location (kind of works)
+getDefaultCamera().setTrackingEnabled(False)
+
+#turn off camera navigation
+getDefaultCamera().setControllerEnabled(True)
+
+#getDefaultCamera().addChild(everything)
