@@ -249,7 +249,7 @@ soundUpdateList.append(device2_New)
 device3_New = SoundUtil("printing", "SOUNDS/dotmatrixprinterMONO.wav")
 time.sleep(1)
 device3_New.setProgram("-p RANDOM_LOOP -t 60 -f 50 -v "+str(1.0*soundFactor))
-device3_New.setSoundPosition(Vector3(3, 1, 0))
+device3_New.setSoundPosition(Vector3(-3, 1, 0))
 device3_New.setDebug(True)
 soundUpdateList.append(device3_New)
 

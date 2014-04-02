@@ -9,6 +9,9 @@ from soundUtil import *
 scene = getSceneManager()
 cam = getDefaultCamera()
 
+m = MenuManager.createAndInitialize()
+mainMen = m.getMainMenu()
+
 scene.setBackgroundColor(Color(0, 0, 0, 1))
 
 light = Light.create()
@@ -55,8 +58,8 @@ def onUpdate(frame, t, dt):
 		x = r1 * cos(theta)
 		z = r2 * sin(theta)
 		theta = theta + t/2
-		sphere.setPosition(Vector3(1+count/60, 0, 0))
-		obj1.update(frame, t, dt)
+		#sphere.setPosition(Vector3(1+count/60, 0, 0))
+		#obj1.update(frame, t, dt)
 
 
 setUpdateFunction(onUpdate)

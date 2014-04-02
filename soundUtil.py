@@ -7,10 +7,13 @@ import random
 
 
 
-soundEnv = getSoundEnvironment()	# container for sound environment
-
-
-
+__soundEnv = getSoundEnvironment()	# container for sound environment
+__mm = MenuManager.createAndInitialize()
+__mainMenu = __mm.getMainMenu()
+__debugSound = None
+__debugSoundContainer = None
+__buttonList = dict()
+__soundInstances = dict()
 
 class SoundCons:
 
@@ -73,6 +76,7 @@ class SoundUtil:
 	__loopPlay = False		# (boolean)	play in loop
 	__stereo = False			# (boolean)	play in stereo mode
 	__isPlaying = False		# (boolean)	check is playing sound
+	__isMuted = False 	# (boolean) attach the spheres to cam
 
 	__startTime = 0			# (int)		start time of play	(in seconds)
 	__endTime = -1			# (int)		end time of play	(in seconds)
@@ -111,13 +115,14 @@ class SoundUtil:
 	# no return value
 	def __init__(self, dirc, soundFilePath, hostObj = None):
 		# None if no hostObj
-		global __soundEnv
-		if soundEnv != None:
+		__soundEnv = getS0undEnv()
+		if __soundEnv != None:
 			self.__hostObj = hostObj
-			self.__soundLoad = soundEnv.loadSoundFromFile(dirc, soundFilePath)
+			self.__soundLoad = __soundEnv.loadSoundFromFile(dirc, soundFilePath)
 			self.__soundInstance = SoundInstance(self.__soundLoad)
 			self.__soundInstance.setLoop(False)
 			self.__soundFile = soundFilePath
+			addToS0undInstances(self.__soundFile, self)
 			#self.__soundEnv.showDebugInfo(True)
 		# end if
 	# end __init__
@@ -308,15 +313,50 @@ class SoundUtil:
 	# end __parseInput
 
 
+	# (PRIVATE) : shows the sound as a visual for debug purposes.
+	# takes no argument
+	# no return value
 	def __showSound(self):
-		self.__debugMode("Showing sound in space")
 		self.__sphere.setPosition(self.__soundInstance.getPosition())
 		self.__sphere2.setPosition(self.__soundInstance.getPosition())
-
-		self.__name.setPosition(self.__sphere.getPosition() + Vector3(0,0.5,0))
-		#self.__name.setFacingCamera(getDefaultCamera())
+		self.__name.setPosition(self.__sphere.getPosition() + Vector3(-0.5,0.5,0))
+		pos = "x: " + str(self.__soundInstance.getPosition().x) + ", y: " + str(self.__soundInstance.getPosition().y) + ", z: " + str(self.__soundInstance.getPosition().z)
+		self.__name.setText(pos + " | " + self.__soundFile)
+		self.__sphere.setEffect("colored -d #EEEE11EE")
 		
 	# end __showSound
+
+	def __hideSound(self):
+		self.__sphere.setPosition(self.__soundInstance.getPosition())
+		self.__sphere2.setPosition(self.__soundInstance.getPosition())
+		self.__name.setPosition(self.__sphere.getPosition() + Vector3(-0.5,0.5,0))
+		pos = "x: " + str(self.__soundInstance.getPosition().x) + ", y: " + str(self.__soundInstance.getPosition().y) + ", z: " + str(self.__soundInstance.getPosition().z)
+		self.__name.setText(pos + " | " + self.__soundFile)
+		self.__sphere.setEffect("colored -d #EE1111EE")
+	# end __hideSound
+
+
+	# (PRIVATE) : adds the sound to debug menu
+	# takes no argument
+	# no return value
+	def __addToDebugMenu(self):
+
+		button = Button.create(getDebugS0undVar())
+		button.setText(self.__soundFile)
+		button.setCheckable(True)
+		button.setChecked(True)
+		button.setUIEventCommand('updateS0undFromDebugMenu()')
+		addToButt0nList(self.__soundFile, button)
+
+		text = button.getLabel()
+		text.setColor(Color("#EEEE11EE"))
+		text.setText(str("(Un-Muted) : ") + str(self.__soundFile))
+
+		self.__debugMode("Added to the Debug Menu")
+	# end __addToDebugMenu
+
+
+	
 
 	# ------------------------------------------------------------------------------------
 	# public members
@@ -377,63 +417,9 @@ class SoundUtil:
 					self.__startTime = random.randrange(0,1)
 			# end if
 		# end if
+
+		self.__addToDebugMenu()
 	# end setProgram
-
-	'''
-	def setProg(self, program, list = None):
-		self.__program = program
-		if (program == SoundCons.ONCE):
-			if (len(list) < 1):
-				print "---"
-				print "Need one or two elements in the list."
-				print "Exiting"
-				print "---"
-				exit(0)
-			elif (len(list) == 1):
-				self.__startTime = list[0]
-				self.__endTime = -1
-			elif (len(list) == 2):
-				self.__startTime = list[0]
-				self.__endTime = list[1]
-			# end if
-		# end if
-
-		if (program == SoundCons.RANDOM):
-			if (len(list) == 0):
-				self.__randomLevel = SoundCons.RANDOM_FULL
-			elif (len(list) >= 1):
-				self.__randomLevel = list[0]
-			# end if
-			random.seed()
-			self.__randomTime = random.randrange(9, 101, 5)
-			self.__randomSeed = random.random()
-
-
-			if (self.__randomLevel == SoundCons.RANDOM_CONSTANT):
-				if (len(list) >= 2):
-					self.__randomTime = list[1]
-				# end if
-				if (len(list) >= 3):
-					self.__randomSeed = list[2]
-				# end if
-			elif (self.__randomLevel == SoundCons.RANDOM_LOOP):
-				self.__soundInstance.setLoop(True)
-				self.__soundInstance.setVolume(0.0)
-				if (len(list) >= 2):
-					self.__randomTime = list[1]
-				# end if
-				if (len(list) >= 3):
-					self.__randomSeed = list[2]
-				# end if
-				if (len(list) >= 4):
-					self.__randomVolume = list[3]
-				# end if
-				self.__soundInstance.play()
-			# end if
-		# end if
-	# end setProgram
-	'''
-
 
 	# (PUBLIC) : set Loop play
 	# takes one argument
@@ -513,17 +499,9 @@ class SoundUtil:
 				# start playing from 0 till it finishes playing
 				self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 				self.__setPlay(True)
-			# end if
+			# end if	
 		
-		elif self.__program == SoundCons.LOOP:
-			if (self.__isPlaying == False):
-				self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
-				self.__setPlay(True)
-			# end if
-			#self.__debugMode("Playing : LOOP")
-		
-
-		elif (self.__program == SoundCons.FREQUENT_CONSTANT) or (self.__program == SoundCons.FREQUENT_RANDOM):
+		elif ((self.__program == SoundCons.FREQUENT_CONSTANT) or (self.__program == SoundCons.FREQUENT_RANDOM)):
 			self.__debugMode("frame, t, dt : " + str(frame) + " : " + str(int(t)) + " : " + str(dt))
 			if (int(t) >= self.__startTime):
 				self.__setPlay(True)
@@ -564,9 +542,17 @@ class SoundUtil:
 			#self.__debugMode("Not Playing")	
 
 		# end if
-
 		if (self.__debugOn == True):
-			self.__showSound()
+			if (self.__isMuted == True):
+				self.__hideSound()
+				self.__soundInstance.setVolume(0)
+			else:	
+				self.__showSound()
+				self.__soundInstance.setVolume(self.__randomVolume)
+
+					
+
+		
 
 	# end update
 
@@ -585,21 +571,93 @@ class SoundUtil:
 		self.__sphere2 = SphereShape.create(0.1, 4)
 		self.__sphere2.getMaterial().setAlpha(0)
 		self.__sphere2.setEffect("colored -d #999999FF")
+		self.__sphere2.getMaterial().setTransparent(True)
 
-		self.__name = Text3D.create('fonts/verdana.ttf', 1, str(self.__soundFile))
+		self.__name = Text3D.create("", 1, str(self.__soundInstance.getPosition()) + " | " + str(self.__soundFile))
 		self.__name.setFontSize(0.07)
 		self.__name.getMaterial().setDoubleFace(1)
+		pos = "x: " + str(self.__soundInstance.getPosition().x) + ", y: " + str(self.__soundInstance.getPosition().y) + ", z: " + str(self.__soundInstance.getPosition().z)
+		self.__name.setText(pos + " | " + self.__soundFile)
 		self.__name.setFixedSize(False)
 		self.__name.setColor(Color('white'))
 		self.__name.yaw(radians(180))
 
-
-		
-
-		
 	# end setDebug
 
+
+	def setMute(self, val):
+		if val == True:
+			self.__soundInstance.setVolume(0)
+			self.__hideSound()
+			self.__isMuted = True
+			self.__debugMode("Muted " + str(self.__soundFile) + " ; Vol " + str(self.__soundInstance.getVolume()))
+			self.__debugMode("Position : " + str(self.__soundInstance.getPosition()))
+		
+		else:
+			self.__soundInstance.setVolume(self.__randomVolume)
+			self.__showSound()
+			self.__isMuted = False
+			self.__debugMode("UnMuted " + str(self.__soundFile) + " ; Vol " + str(self.__soundInstance.getVolume()))
+			self.__debugMode("Position : " + str(self.__soundInstance.getPosition()))
+		
+			# end if
+	# end setMute
+
 # end class SoundUtil
+
+
+
+
+def initSoundSubMenu():
+	global __mainMenu, __debugSound, __debugSoundContainer
+
+	#Level1 menu
+	__debugSound = __mainMenu.addSubMenu("Debug Sound")
+	__debugSoundContainer = __debugSound.addContainer().getContainer()
+	__debugSoundContainer.setLayout(ContainerLayout.LayoutVertical)
+	__debugSoundContainer.setHorizontalAlign(HAlign.AlignLeft)
+
+def getDebugS0undVar():
+	global __debugSoundContainer
+	return __debugSoundContainer
+
+def getButt0nList():
+	global __buttonList
+	return __buttonList
+
+
+def addToButt0nList(name, button):
+	global __buttonList
+	__buttonList[name] = button
+
+
+def updateS0undFromDebugMenu():	
+	for sound, button in getButt0nList().iteritems():
+		if button.isChecked() == False:
+			getS0undInstance(sound).setMute(True)
+			text = button.getLabel()
+			text.setColor(Color("#EE1111EE"))
+			text.setText(text.getText().replace("(Un-Muted) : ", "(Muted) : "))
+
+		else:
+			getS0undInstance(sound).setMute(False)
+			text = button.getLabel()
+			text.setColor(Color("#EEEE11EE"))
+			text.setText(text.getText().replace("(Muted) : ", "(Un-Muted) : "))
+
+def getS0undInstance(name):
+	global __soundInstances
+	return __soundInstances[name]
+
+def addToS0undInstances(name, sound):
+	global __soundInstances
+	__soundInstances[name] = sound
+
+def getS0undEnv():
+	global __soundEnv
+	return __soundEnv
+
+initSoundSubMenu()
 
 
 
