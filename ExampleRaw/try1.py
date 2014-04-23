@@ -20,7 +20,7 @@ light.setLightType(LightType.Point)
 
 sphere = SphereShape.create(0.1,4)
 sphere.getMaterial().setAlpha(0.5)
-sphere.setPosition(Vector3(10,1,0))
+sphere.setPosition(Vector3(0,0,-1))
 sphere.getMaterial().setProgram("colored")
 sphere.setEffect('colored -e #88000099')
 
@@ -60,6 +60,18 @@ def onUpdate(frame, t, dt):
 		theta = theta + t/2
 		#sphere.setPosition(Vector3(1+count/60, 0, 0))
 		#obj1.update(frame, t, dt)
+		SoundUtil.update(frame, t, dt)
 
+def onEvent():
+	e = getEvent()
+	SoundUtil.updateEvent(e)
+
+'''
+def onDraw(displaySize, tileSize, camera, painter):
+	SoundUtil.updateDraw(displaySize, tileSize, camera, painter)
+'''
 
 setUpdateFunction(onUpdate)
+setEventFunction(onEvent)
+#setDrawFunction(onDraw)
+

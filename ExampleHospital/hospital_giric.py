@@ -269,14 +269,14 @@ soundUpdateList.append(device5_New)
         
 
 
-
+'''
 oldD = 0
 oldP = 0
 oldT = 0
 oldE = 0
 oldC = 0
 random.seed()
-'''
+
 def updateDotMatrix():
     global soundFactor
     num = random.random()
@@ -313,6 +313,11 @@ def updateCodeblue():
     if (num > 0.95):
         cimusic.play() 
 '''
+def onEvent():
+    e = getEvent()
+    SoundUtil.updateEvent(e)
+
+setEventFunction(onEvent)
 
 
 def onUpdate(frame, t, dt):
@@ -340,9 +345,12 @@ def onUpdate(frame, t, dt):
             oldC = t
             updateCodeblue()
     '''
-
+    '''
     for soundObj in soundUpdateList:
         soundObj.update(frame, t, dt)
+    '''
+    SoundUtil.update(frame, t, dt)
+
 
 setUpdateFunction(onUpdate)
 
