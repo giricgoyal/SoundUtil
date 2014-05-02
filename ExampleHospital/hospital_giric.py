@@ -355,7 +355,7 @@ def onUpdate(frame, t, dt):
 setUpdateFunction(onUpdate)
 
 # set the scene to be monoscopic
-getDisplayConfig().stereoMode = StereoMode.Mono
+#getDisplayConfig().stereoMode = StereoMode.Mono
 
 # camera position manually determined with tracking turned on                     
 getDefaultCamera().setPosition(Vector3(-0.75, 0, 0))
